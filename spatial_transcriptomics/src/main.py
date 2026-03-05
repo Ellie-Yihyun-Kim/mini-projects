@@ -16,6 +16,8 @@ df = pd.DataFrame(data)
 ## df['x'], df['y']: 데이터프레임에서 x좌표와 y좌표 열을 가져와 점을 찍는다.
 ## c=df['gene_expression']: c는 Color의 약자. 발현량 수치에 따라 점의 색깔을 다르게 칠하라는 뜻. (예: 암세포는 높은 수치니까 밝은색, 정상은 낮은 수치니까 어두운색)
 ## cmap='viridis': Color Map의 약자로, 색상 테마. 'viridis'는 생물정보학 논문에서 가장 선호하는 테마 중 하나로, 색맹인 사람도 구분하기 쉽고 수치 변화가 직관적.
+plt.figure(figsize=(6,5))
+
 plt.scatter(df['x'], df['y'], c=df['gene_expression'], cmap='viridis')
 # 2) Colorbar 추가
 ## 우측에 막대기 모양의 범례를 추가. "어떤 색이 몇 점인지"를 보여줌. 산업계 보고서나 논문에서 이 컬러바가 없으면 "데이터 해석이 불가능하다"는 지적을 받기 쉬움.
@@ -24,4 +26,5 @@ plt.colorbar(label='Gene Expression Level')
 ## plt.title: 그래프 상단에 제목을 단다.
 plt.title("Spatial Cell Map")
 ## plt.show(): 메모리에 그려진 그래프를 화면에 실제로 띄운다.
+plt.savefig("../outputs/spatial_cell_map.png", dpi=200, bbox_inches="tight")
 plt.show()
