@@ -1,5 +1,7 @@
 ## Mini Logistic Regression Project
 
+Goal: Understand how statistical models connect to biological interpretation for disease prediction.
+
 In this project, I trained a logistic regression model to classify breast tumors using the scikit-learn breast cancer dataset.
 
 I split the dataset into training and testing sets to check whether the model generalizes well to unseen data. This helps evaluate how well the model performs on new patients.
@@ -7,6 +9,7 @@ I split the dataset into training and testing sets to check whether the model ge
 The model outputs predicted probabilities, which I used to generate an ROC curve.
 
 The AUC value summarizes how well the model separates malignant and benign tumors.
+
 It measures the model's ability to distinguish between classes across all possible thresholds.
 
 For real-world clinical response prediction, external validation datasets and proper confounder control would be necessary.
