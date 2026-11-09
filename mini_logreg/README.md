@@ -1,68 +1,94 @@
-## Mini Logistic Regression Project
+# Mini Logistic Regression Project
 
-Goal: Understand how statistical models connect to biological interpretation for disease prediction.
+## Overview
 
-In this project, I trained a logistic regression model to classify breast tumors using the scikit-learn breast cancer dataset.
+This project explores how logistic regression can be used to classify breast tumors using the Wisconsin Diagnostic Breast Cancer dataset from scikit-learn.
 
-I split the dataset into training and testing sets to check whether the model generalizes well to unseen data. This helps evaluate how well the model performs on new patients.
+The goal was to understand the basic machine learning workflow and how statistical models can be applied to biological data.
 
-The model outputs predicted probabilities, which I used to generate an ROC curve.
+## Methods
 
-The AUC value summarizes how well the model separates malignant and benign tumors.
+- **Dataset:** Wisconsin Diagnostic Breast Cancer (WDBC)
+- **Model:** Logistic Regression (scikit-learn)
+- **Train/test split:** 70% training, 30% testing
+- **Evaluation:** ROC curve and Area Under the Curve (AUC)
+- **Feature analysis:** Examination of model coefficients
 
-It measures the model's ability to distinguish between classes across all possible thresholds.
+The dataset uses the following class labels:
 
-For real-world clinical response prediction, external validation datasets and proper confounder control would be necessary.
+- `0 = malignant` (악성 종양)
+- `1 = benign` (양성 종양)
 
-Top features by |coefficient|: texture error (+), worst concavity (-), mean radius (+), worst symmetry (-), worst compactness (-)
+The model uses `predict_proba(X_test)[:, 1]` to estimate the probability of a tumor being benign.
 
-# What I learned today
-1. Why use train_test_split?
--> The model could just memorize all training data(overfitting) which may reduce performance on new patients.
-2. Why is AUC better than accuracy?
--> Accuracy depends on single threshold(mostly 0.5). In contrast, AUC evaluates the model’s ability to distinguish between classes across all thresholds.
-3. What is pandas and why do we use this?
--> A library for working with tabular data (DataFrame), like spreadsheets. It is useful for sorting, filtering, grouping and calculation when analyzing data.
+## Results
 
-## Background Concept in Korean
-1. Logistic regression 직관
-- 결과가 0/1일 때 쓰는 모델
-- 각 변수는 “확률을 얼마나 올리거나 내리는지” 영향을 준다
-- 계수(coefficient)가 +면 확률 ↑, -면 확률 ↓
+The logistic regression model achieved an ROC AUC of approximately 1.00 on the test set, rounded to two decimal places.
 
-2. Cancer 
-- benign = 양성 종양
-- malignant = 악성 종양 (암)
-->  0 = benign (암 아님)
-    1 = malignant (암)
-=> 그래서 우리가 예측한 건:
-이 종양이 malignant일 확률; 이미 악성 종양일 확률
+The ROC curve evaluates how well the model distinguishes benign from malignant tumors across different classification thresholds, treating benign as the positive class.
 
-3. Concavity : 세포 가장자리의 들어간 정도
-- 암세포는 보통 모양이 불규칙적, 울퉁불퉁함, concavity가 큼
+The five features with the largest absolute coefficients were:
 
-4. 과적합(overfitting)
-- 직관적 표현: 모델이 데이터를 그냥 외워버린다.
+1. Texture error (+)
+2. Worst concavity (-)
+3. Mean radius (+)
+4. Worst symmetry (-)
+5. Worst compactness (-)
 
-하지만 조금 더 정확히 말하면:
--> 모델이 진짜 질병 패턴(signal) 뿐만 아니라, 우연히 생긴 노이즈(noise)까지 같이 학습해버리는 상태.
-=> 일반화(generalization)를 못 하는 문제 발생 가능
+These coefficients describe the fitted model but should not be interpreted as direct measures of biological importance.
 
-5. Regularization
-모델이 coefficient를 학습할 때 너무 큰 숫자를 쓰지 못하게 penalty를 주는 것 -> feature selection이 가능해짐
-=> 즉; 모델의 복잡도를 인위적으로 제한하는 장치
+## What I Learned
 
-# Things to think about for building my insight.
-1. Why is toy data much easier than real-world clinical prediction?
-- Feature dimensionality
-- Noise and batch effects
-- Confounders
-- Class imbalance
+**1. Why use a train/test split?**
 
-# Notes / Limitations
-- Coefficient signs/magnitudes can be unstable without feature scaling.
-- Highly correlated features (multicollinearity) can lead to counterintuitive coefficients.
-- For clinical use, external validation and confounder control are required.
+Training and testing on the same data can produce overly optimistic performance estimates. Using a separate test set helps evaluate how well a model generalizes to unseen observations.
 
-# Next step
-- Add feature scaling (StandardScaler) and re-check coefficient stability.
+**2. Why use ROC AUC instead of accuracy alone?**
+
+Accuracy evaluates predictions at a particular classification threshold, while ROC AUC summarizes how well the model ranks the positive class above the negative class across thresholds.
+
+**3. Why use pandas?**
+
+Pandas provides DataFrames for organizing, sorting, filtering, and analyzing tabular data. In this project, I used pandas to organize and compare model coefficients.
+
+## Background Concepts (Korean Notes)
+
+### 1. Logistic Regression
+
+Logistic Regression은 두 클래스를 구분하는 데 사용할 수 있는 분류 모델입니다.
+
+- 각 feature에 대한 coefficient(계수)를 학습합니다.
+- 계수가 양수이면 다른 조건이 같을 때 class 1의 log-odds가 증가합니다.
+- 계수가 음수이면 class 1의 log-odds가 감소합니다.
+- 이 프로젝트에서 class 1은 benign(양성 종양)입니다.
+
+### 2. Concavity
+
+Concavity는 종양 세포핵 윤곽에서 오목한 부분의 정도를 나타내는 특징입니다.
+
+### 3. Overfitting
+
+과적합은 모델이 실제 패턴뿐 아니라 학습 데이터에만 존재하는 우연한 노이즈까지 학습하여 새로운 데이터에 대한 성능이 저하될 수 있는 현상입니다.
+
+### 4. Regularization
+
+Regularization은 모델의 계수에 제약을 주어 과도하게 복잡한 모델을 방지하는 방법입니다.
+
+- 큰 계수에 penalty를 부여합니다.
+- 일반화 성능을 개선하는 데 도움이 될 수 있습니다.
+- L1 regularization은 일부 계수를 0으로 만들어 feature selection에 활용될 수 있습니다.
+- L2 regularization은 일반적으로 계수를 줄이지만 자동으로 feature selection을 수행하지는 않습니다.
+
+## Limitations
+
+- Feature scaling was not applied, so coefficient magnitudes should not be directly compared as measures of feature importance.
+- Correlated features may lead to unstable or counterintuitive coefficients.
+- Performance was evaluated using a single random train/test split.
+- A high AUC on this dataset does not establish clinical validity.
+- Clinical applications would require external validation and careful consideration of confounding factors and dataset differences.
+
+## Next Steps
+
+- Apply `StandardScaler` and re-evaluate model performance.
+- Examine coefficient stability after feature scaling.
+- Explore cross-validation to assess performance across different data splits.
